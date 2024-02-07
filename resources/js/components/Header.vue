@@ -1,5 +1,5 @@
 <template>
-   <nav class="navbar navbar-expand-lg navbar-light bg-light">
+   <nav class="navbar navbar-expand-lg navbar-light bg-light mb-5">
   <div class="container-fluid">
     <router-link class="navbar-brand" to="/">Home</router-link>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,16 @@
   <script>
   export default {
     name: 'Header',
+    data(){
+        return{
+            name: '',
+            accomplished: false,
+            errors: [],
+        }
+    },
+    methods:{
+
+    },
   }
   </script>
 
