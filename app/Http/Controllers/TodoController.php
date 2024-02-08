@@ -9,12 +9,8 @@ use App\Http\Requests\TodoRequest;
 class TodoController extends Controller
 {
     public function index(){
-        // $todos = Todo::orderBy('created_at', 'DESC')->get();
-        // return response()->json([
-        //     'data' => $todos,
-        //     'status' => 200,
-        // ]);
-        $tasks = Todo::select(['id','name', 'accomplished', 'created_at']);
+
+        $tasks = Todo::select(['id','name', 'accomplished', 'created_at'])->orderBy('created_at', 'DESC');
 
         return DataTables::of($tasks)->make(true);
     }

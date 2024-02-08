@@ -26,6 +26,7 @@ export default {
         }
     },
     async mounted() {
+        const SELF = this;
         $(document).ready(function () {
             $.noConflict();
             $('#tasks-table').DataTable({
@@ -40,7 +41,12 @@ export default {
                             return data == 1 ? true : false;
                         }
                     },
-                    { "data": "created_at" },
+                    {
+                        "data": "created_at",
+                        render: function (data, type, row) {
+                            return data = data.split('T')[0];
+                        }
+                    },
                     {
                         // Custom column for actions
                         render: function (data, type, row) {
@@ -57,6 +63,7 @@ export default {
         $(document).on('click', '.editData', function (event) {
             event.stopPropagation();
             const id = $(this).data('id');
+            SELF.$router.push({ path: '/edit_todo', query: { id: id } })
         });
         $(document).on('click', '.deleteData', async function (event) {
             event.stopPropagation();
