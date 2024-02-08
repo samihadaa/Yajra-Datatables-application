@@ -1,52 +1,81 @@
 <template>
     <div class="container">
-        <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Task</th>
-      <th scope="col">Task Date</th>
-      <th scope="col">Accomplished</th>
-    </tr>
-  </thead>
-  <tbody v-for="todo in todos" :key="todo.name">
-    <tr>
-      <th scope="row">1</th>
-      <td>{{ todo.name }}</td>
-      <td>{{ todo.created_at }}</td>
-      <td>{{ todo.accomplished == 0 ? false : true }}</td>
-    </tr>
-  </tbody>
-</table>
+        <div>
+            <table id="tasks-table" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Completed</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
+import $ from 'jquery'
+import DataTable from 'datatables.net-dt';
 export default {
-  name: 'TodoList',
-  data(){
-    return{
-        todos: [],
-    }
-  },
-  async mounted(){
-    await this.getTasks()
-  },
-  methods:{
-    async getTasks(){
-       const SELF = this
-        let url = 'http://localhost:8000/api/todos'
-        await axios.get(url).then( response=>{
-            SELF.todos = response.data.data
-        }).catch(error =>{
-            console.log(error)
+    name: 'TodoList',
+    data() {
+        return {
+        }
+    },
+    async mounted() {
+        $(document).ready(function () {
+            $.noConflict();
+            $('#tasks-table').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": "http://localhost:8000/api/todos",
+                "columns": [
+                    { "data": "name" },
+                    {
+                        "data": "accomplished",
+                        render: function (data, type, row) {
+                            return data == 1 ? true : false;
+                        }
+                    },
+                    { "data": "created_at" },
+                    {
+                        // Custom column for actions
+                        render: function (data, type, row) {
+                            return `
+                <button class="btn btn-primary editData" data-id="${row.id}">Edit</button>
+                <button class="btn btn-danger deleteData" data-id="${row.id}">Delete</button>
+              `;
+                        },
+                    },
+                ]
+            })
         })
+
+        $(document).on('click', '.editData', function (event) {
+            event.stopPropagation();
+            const id = $(this).data('id');
+        });
+        $(document).on('click', '.deleteData', async function (event) {
+            event.stopPropagation();
+            const id = $(this).data('id');
+            // Make an HTTP DELETE request to delete the task
+            await axios.post(`http://localhost:8000/api/todos/delete/${id}`)
+                .then(response => {
+                    console.log('Task deleted successfully:', response.data);
+                    $('#tasks-table').DataTable().ajax.reload();
+                })
+                .catch(error => {
+                    console.error('Error deleting task:', error.response.data);
+                });
+        });
+    },
+    methods: {
+
     }
-  }
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

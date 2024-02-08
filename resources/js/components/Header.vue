@@ -20,16 +20,7 @@
   <script>
   export default {
     name: 'Header',
-    data(){
-        return{
-            name: '',
-            accomplished: false,
-            errors: [],
-        }
-    },
-    methods:{
 
-    },
   }
   </script>
 

@@ -6,9 +6,11 @@
 
         <title>Laravel</title>
         @vite('resources/css/app.css')
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
     </head>
     <body>
         <div id="app"></div>
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
         @vite('resources/js/app.js')
     </body>
 </html>
