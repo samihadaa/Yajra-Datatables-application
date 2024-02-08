@@ -26,6 +26,7 @@ export default {
     name: 'EditTodo',
     data() {
         return {
+            //Task variables
             TodoName: '',
             accomplished: '',
             nameError: '',
@@ -36,7 +37,15 @@ export default {
         await this.getTask()
     },
     methods: {
-        async editTask() {
+         /**
+         * Update the task by editing name and check/uncheck accomplished
+         *
+         * @param (String)  this.task.name this.task.accomplished | (int) id
+         *
+         * @return Redirect
+         *
+         * @error handle axios error
+        */        async editTask() {
             this.task.accomplished = this.task.accomplished ? 1 : 0;
             let formData = new FormData()
             formData.append('name', this.task.name)
@@ -45,7 +54,6 @@ export default {
             let url = `http://localhost:8000/api/todos/update/${id}`
                 await axios.post(url, formData)
                     .then(response => {
-                        console.log('response:', response.data.data);
                         this.$router.push({ path: '/' })
                     })
                     .catch(error => {
@@ -55,6 +63,15 @@ export default {
                         }
                     });
         },
+        /**
+         * Get the task list
+         *
+         * @param int  id
+         *
+         * @return object $task
+         *
+         * @error handle axios error
+        */
         async getTask() {
             const SELF = this
             const id = this.$route.query.id
